@@ -6,9 +6,16 @@
 # example /tmp/pg_backup.sh 2>&1 | tee -a /tmp/backupLogs.log
 set -x
 
-# rotating vacuumdb logs
-backupRotate(){
-        cd $backupDir/..
+# cleaning up old Logical backups
+logicalBackupRotate(){
+        cd $logicalBackupDir/..
+        find . -type f -name "*.log" -mtime +30 -delete
+        exit 0;
+}
+
+# cleaning up old physical backups
+physicalBackupRotate(){
+        cd $physicalBackupDir/..
         find . -type f -name "*.log" -mtime +30 -delete
         exit 0;
 }
@@ -32,8 +39,8 @@ case $pgState in
 
     # Initiating backup directory...
     now=$(date +"%d-%h-%y")
-    backupDir=/u05/pgcluster/$pgVer/exp/e2c_dumps/$host/logical_backup/$now
-    [[ ! -d $backupDir ]] && mkdir -p $backupDir 
+    logicalBackupDir=/u05/pgcluster/$pgVer/exp/e2c_dumps/$host/logical_backup/$now # Logical backup dir
+    [[ ! -d $logicalBackupDir ]] && mkdir -p $logicalBackupDir
 
     # check if Postgres instance is secondary or not
     pgState=`$psqlPath postgresql://$host:$pgPort/postgres -tc "select pg_is_in_recovery();" |head -1`
@@ -41,16 +48,17 @@ case $pgState in
     if [ $pgState == t ]; then # when PostgreSQL node is Secondary / Read-only
         echo "PG Node not primary, proceesing with backup"
 
+        # Initiating PostgreSQL logical Backup
         # backup globals
-        $pg_dumpall --host=$host --port=$pgPort --globals-only | gzip > $backupDir/postgres_globals.sql.gz
+        $pg_dumpall --host=$host --port=$pgPort --globals-only | gzip > $logicalBackupDir/postgres_globals.sql.gz
 
         # backup individual databases
         for db in `$psqlPath --host=$host --port=$pgPort -d postgres -t -c "select datname from pg_database where not datistemplate" | grep '\S' | awk '{$1=$1};1'`; do
-            $pg_dump --host=$host --port=$pgPort $db | gzip > $backupDir/$db.sql.gz
+            $pg_dump --host=$host --port=$pgPort $db | gzip > $logicalBackupDir/$db.sql.gz
         done
 
-        # calling rotate backup directory function
-        backupRotate
+        # calling rotate logical backup directory function
+        logicalBackupRotate
 
     elif [ $pgState == f ];then # when PostgreSQL node is Primary / non-read-only
         echo "PG Node is Primary, Will not backup on this node"
