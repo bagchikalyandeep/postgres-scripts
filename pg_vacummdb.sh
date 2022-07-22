@@ -1,8 +1,9 @@
 #!/bin/bash
-# PostgreSQL vacuum script for E2C DB Team
+# PostgreSQL vacuum script
 # Prepared by Kalyandeep Bagchi
 # version 1.0
 # usage <path_to_vacuumdb.sh>
+# use your own <vacummLog_path> to store vacuumdb logs. I have used my own.
 set -x
 
 # rotating vacuumdb logs
