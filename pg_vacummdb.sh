@@ -22,8 +22,8 @@ case $pgState in
   1)
     # Environment details
         host=`hostname -f`
-        psqlPath=`find /local -type f -name "psql"`
-        vacuumdbPath=`find /local -type f -name "vacuumdb"`
+        psqlPath=`find /local -type f -name "psql" -print -quit`
+        vacuumdbPath=`find /local -type f -name "vacuumdb" -print -quit`
         pgVer=`$vacuumdbPath --version | awk '{print $(NF)}' | cut -d '.' -f 1`
         pgPort=`netstat -plunt | grep postgres | egrep -v tcp[6] | awk '{print $4}' | rev  | cut -d ':' -f 1 | rev`
         vacummLog=/u05/pgcluster/$pgVer/exp/e2c_vacuumdb_logs/$host/vacuumLogs-"`date +"%d-%m-%Y"-%H-%M-%S`.log"
