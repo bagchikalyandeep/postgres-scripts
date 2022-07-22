@@ -1,8 +1,9 @@
 #!/bin/bash
-# PostgreSQL vacuum script for E2C DB Team
+# PostgreSQL backup script
 # Prepared by Kalyandeep Bagchi
 # version 1.0
-# usage <path_to_vacuumdb.sh> 2>&1 | tee <path_to_backupLogs>
+# usage <path_to_backup.sh> 2>&1 | tee -a <path_to_backupLogs.log>
+# example /tmp/pg_backup.sh 2>&1 | tee -a /tmp/backupLogs.log
 set -x
 
 # rotating vacuumdb logs
