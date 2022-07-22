@@ -32,7 +32,7 @@ case $pgState in
         pgState=`psql postgresql://localhost:5454/postgres -tc "select pg_is_in_recovery();" |head -1`
 
         if [ $pgState == t ]; then # when PostgreSQL node is Secondary / Read-only
-                echo "PG Node not primary, aborting!"
+                echo "PG Node not primary, aborting!" >> $vacummLog
                 exit 0;
 
         elif [ $pgState == f ];then # when PostgreSQL node is Primary / non-read-only
@@ -40,7 +40,7 @@ case $pgState in
                 # calling vacuumdb logs
                 vacuumRotate
         else
-                echo "Unable to determine state of the PostgreSQL node, aborting!"
+                echo "Unable to determine state of the PostgreSQL on `hostname -f`, aborting!" >> $vacummLog
                 exit 1;
         fi;;
 esac
