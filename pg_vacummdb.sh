@@ -3,7 +3,7 @@
 # Prepared by Kalyandeep Bagchi
 # version 1.0
 # usage <path_to_vacuumdb.sh>
-set -x
+# set -x
 
 # rotating vacuumdb logs
 vacuumRotate(){
