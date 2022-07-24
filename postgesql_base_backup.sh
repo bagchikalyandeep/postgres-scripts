@@ -1,6 +1,6 @@
 #!/bin/bash
 # PostgreSQL Physical Backup script
-# Prepared by Kalyandeep Bagchi
+# Author: Kalyandeep Bagchi
 # version 1.0
 # usage <path_to_backup.sh> 2>&1 | tee -a <path_to_backupLogs.log>
 # example /tmp/pg_backup.sh 2>&1 | tee -a /tmp/backupLogs.log
