@@ -1,7 +1,7 @@
 #!/bin/bash
 # PostgreSQL backup script
 # Prepared by Kalyandeep Bagchi
-# version 1.0
+# version 1.14
 # usage <path_to_backup.sh> 2>&1 | tee -a <path_to_backupLogs.log>
 # example /tmp/pg_backup.sh 2>&1 | tee -a /tmp/backupLogs.log
 set -x
@@ -21,7 +21,7 @@ physicalBackupRotate(){
 }
 
 # check if PostgreSQL process is running
-pgProc=`pgrep -u e2cpostgre -fa -- -D`
+pgProc=`pgrep -u postgres_user_name -fa -- -D`
 [[ -z $pgProc ]] && pgState=0 || pgState=1
 
 case $pgState in
@@ -39,7 +39,7 @@ case $pgState in
 
     # Initiating backup directory...
     now=$(date +"%d-%h-%y")
-    logicalBackupDir=/u05/pgcluster/$pgVer/exp/e2c_dumps/$host/logical_backup/$now # Logical backup dir
+    logicalBackupDir=/u05/pgcluster/$pgVer/exp/dumps/$host/logical_backup/$now # Logical backup dir
     [[ ! -d $logicalBackupDir ]] && mkdir -p $logicalBackupDir
 
     # check if Postgres instance is secondary or not

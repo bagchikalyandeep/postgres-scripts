@@ -1,7 +1,7 @@
 #!/bin/bash
 # PostgreSQL Physical Backup script
 # Author: Kalyandeep Bagchi
-# version 1.0
+# version 1.14
 # usage <path_to_backup.sh> 2>&1 | tee -a <path_to_backupLogs.log>
 # example /tmp/pg_backup.sh 2>&1 | tee -a /tmp/backupLogs.log
 set -x
@@ -14,7 +14,7 @@ physicalBackupRotate(){
 }
 
 # check if PostgreSQL process is running
-pgProc=`pgrep -u e2cpostgre -fa -- -D`
+pgProc=`pgrep -u postgres_user_name -fa -- -D`
 [[ -z $pgProc ]] && pgState=0 || pgState=1
 
 case $pgState in
@@ -30,7 +30,7 @@ case $pgState in
 
     # Initiating backup directory...
     now=$(date +"%d-%h-%y")
-    physicalBackupDir=/u05/pgcluster/$pgVer/exp/e2c_dumps/$host/physical_backup/$now # Physical backup dir
+    physicalBackupDir=/u05/pgcluster/$pgVer/exp/dumps/$host/physical_backup/$now # Physical backup dir
     [[ ! -d $physicalBackupDir ]] && mkdir -p $physicalBackupDir
 
     # check if Postgres instance is secondary or not

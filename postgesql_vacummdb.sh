@@ -1,20 +1,20 @@
 #!/bin/bash
 # PostgreSQL vacuum script
 # Prepared by Kalyandeep Bagchi
-# version 1.0
+# version 1.14
 # usage <path_to_vacuumdb.sh>
 # use your own <vacummLog_path> to store vacuumdb logs. I have used my own.
 set -x
 
 # rotating vacuumdb logs
 vacuumRotate(){
-        cd /u05/pgcluster/$pgVer/exp/e2c_vacuumdb_logs/`hostname -f`/
+        cd /u05/pgcluster/$pgVer/exp/vacuumdb_logs/`hostname -f`/
         find . -type f -name "*.log" -mtime +30 -delete
         exit 0;
 }
 
 # check if PostgreSQL process is running
-pgProc=`pgrep -u e2cpostgre -fa -- -D`
+pgProc=`pgrep -u postgres_user_name -fa -- -D`
 [[ -z $pgProc ]] && pgState=0 || pgState=1
 
 case $pgState in
@@ -27,7 +27,7 @@ case $pgState in
         vacuumdbPath=`find /local -type f -name "vacuumdb" -print -quit`
         pgVer=`$vacuumdbPath --version | awk '{print $(NF)}' | cut -d '.' -f 1`
         pgPort=`netstat -plunt | grep postgres | egrep -v tcp[6] | awk '{print $4}' | rev  | cut -d ':' -f 1 | rev`
-        vacummLog=/u05/pgcluster/$pgVer/exp/e2c_vacuumdb_logs/$host/vacuumLogs-"`date +"%d-%m-%Y"-%H-%M-%S`.log"
+        vacummLog=/u05/pgcluster/$pgVer/exp/vacuumdb_logs/$host/vacuumLogs-"`date +"%d-%m-%Y"-%H-%M-%S`.log"
         touch $vacummLog
 
         # check if Postgres instance is primary or not
