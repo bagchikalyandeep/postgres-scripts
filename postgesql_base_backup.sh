@@ -46,8 +46,7 @@ case $pgState in
         # TBS_NAME=`$BIN_DIR/psql -d postgres --tuples-only --port=5454  -c "SELECT spcname FROM pg_tablespace where spcname NOT LIKE 'pg_%';" | awk '{print $1}'`
         # -T "${TBS_PATH}=${physicalBackupDir}/pg_basebackup/${TBS_NAME}"
 
-        # calling rotate physical backup directory function
-        physicalBackupRotate
+        physicalBackupRotate # calling rotate physical backup directory function
 
     elif [ $pgState == f ];then # when PostgreSQL node is Primary / non-read-only
         echo "PG Node is Primary, Will not backup on this node"
